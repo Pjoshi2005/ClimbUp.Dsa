@@ -83,3 +83,101 @@ export const createProblem = async (req, res) => {
     
   }
 };
+
+export const getAllProblem = async(req , res) => {
+  try {
+    const problem = await db.problem.findMany()
+
+    if(!problem){
+      return res.status(401).json({error : "No Problems found"})
+    }
+
+    res.status(201).json({
+      data : problem,
+      sucess : true,
+      message : "Problems fetched successfully"
+    });
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({error : "Error while fetching problems"})
+  }
+};
+
+export const getProblemById = async(req , res) => {
+  try { 
+    const {id} = req.params
+
+  if(!id){
+    res.status(401).json({error : "Invalid Id"})
+  }
+
+  const problem = await db.problem.findUnique({
+    where : {
+      id
+    },
+  });
+  if(!problem){
+  return res.status(401).json({error : "Problem Not Found"})
+  }
+   return res.status(201).json({
+    data : problem,
+    sucess : true,
+    message : "Problem Fetched Successfully"
+   }) 
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({error : "Error occured while fetching this problem"})
+  }
+}
+
+export const updateProlem = async(req , res) => {
+  try {
+    const {id} = req.params
+   const {
+    title,
+    description,
+    difficulty,
+    tags,
+    examples,
+    constraints,
+    testCases,
+    codeSnippet,
+    hints,
+    editorial,
+    referenceSolution,
+   } = req.body
+
+   const problem = await db.update({
+    where : {
+      id
+    },
+    data: {
+        title,
+        description,
+        difficulty,
+        tags,
+        examples,
+        constraints,
+        testCases,
+        codeSnippet,
+        hints,
+        editorial,
+        referenceSolution,
+      },
+   });
+
+   if(!problem){
+    return res.status(401).json({error : "Updation Failed !"})
+   }
+   res.status(201).json({
+    data : problem,
+    success : true,
+    message : "Changes Updated!"
+   });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({error : "Error occured while Updating Problem"})
+
+    
+  }
+}
