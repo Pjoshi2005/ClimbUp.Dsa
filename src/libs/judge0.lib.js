@@ -9,6 +9,14 @@ export const getJudge0LanguageId = (language) => {
   }
   return languageMap[language.toUpperCase()]
 }
+
+export const getLanguageName = (languageId) => {
+  const LANGUAGE_NAMES = {
+      71 : "PYTHON" , 
+      62 : "JAVA" ,
+      63 : "JAVASCRIPT",
+  }
+}
 //we are getting token from this below code
 export const submitBatch = async (submissions) => {
   try {
