@@ -84,7 +84,7 @@ export const createProblem = async (req, res) => {
   }
 };
 
-export const getAllProblem = async(req , res) => {
+export const getAllProblems = async(req , res) => {
   try {
     const problem = await db.problem.findMany()
 
@@ -130,7 +130,7 @@ export const getProblemById = async(req , res) => {
   }
 }
 
-export const updateProlem = async(req , res) => {
+export const updateProblem = async(req , res) => {
   try {
     const {id} = req.params
    const {
@@ -211,3 +211,33 @@ try {
   return res.status(500).json({error : "Error While Deleting Problem"})
 }
 }
+
+export const getAllSolvedProblemsByUser = async (req, res) => {
+  try {
+    const problems = await db.problem.findMany({
+      where: {
+        solvedBy: {
+          some: {
+            userId: req.user.id,
+          },
+        },
+      },
+      include: {
+        solvedBy: {
+          where: {
+            userId: req.user.id,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({
+      data: problems,
+      success: true,
+      message: "Problems fetched successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Error While Fetching Problems" });
+  }
+};
