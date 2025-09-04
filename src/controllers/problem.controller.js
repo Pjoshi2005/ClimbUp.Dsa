@@ -147,7 +147,7 @@ export const updateProblem = async(req , res) => {
     referenceSolution,
    } = req.body
 
-   const problem = await db.update({
+   const problem = await db.problem.update({
     where : {
       id
     },
